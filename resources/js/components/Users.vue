@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <div class="row">
+        <div class="row" v-if="$gate.isAdminOrAuthor()">
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
@@ -26,11 +26,11 @@
                              <!--   <th>Password</th>-->
                                 <th>Type</th>
                                 <th>Registred At</th>
-                                <th>Modify</th>
+                                <th v-if="$gate.isAdmin()">Modify</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr v-for="user in users" :key="user.id">
+                            <tr v-for="user in users.data" :key="user.id">
                                 <td>{{user.id}}</td>
                                 <td>{{user.name}}</td>
                                 <td>{{user.email}}</td>
@@ -38,12 +38,11 @@
                                 <td>{{user.type | upText}}</td>
                                 <td>{{user.created_at | myDate}}</td>
 
-                                <td>
+                                <td v-if="$gate.isAdmin()">
                                     <a href="#" @click="editUser(user)"><i class="fa fa-edit"></i></a>
                                     <a href="#" @click="deleteUser(user.id)">
                                         <i class="fa fa-trash "></i>
                                     </a>
-
                                 </td>
                             </tr>
 
@@ -51,9 +50,18 @@
                         </table>
                     </div>
                     <!-- /.card-body -->
+                    <div class="card-footer">
+                        <pagination :data="users" @pagination-change-page="getResults">
+                                <span slot="prev-nav">&lt; Previous</span><span slot="next-nav">Next &gt;</span> // you can ignore his two span
+                        </pagination>
+                    </div>
+
                 </div>
                 <!-- /.card -->
             </div>
+        </div>
+        <div v-if="!$gate.isAdminOrAuthor()">
+            <not-found></not-found>
         </div>
         <!-- Modal -->
         <div class="modal fade" id="addNewModal" tabindex="-1" role="dialog" aria-labelledby="addNewModalLabel" aria-hidden="true">
@@ -100,7 +108,7 @@
                             <select name="type" v-model="form.type" id="type" class="form-control" :class="{
                                 'is-invalid':form.errors.has('type')}">
                                 <option value="">Select User Role</option>
-                                <option value="admin">Admin</option>
+                                <option value="admin" v-if="$gate.isAdmin()">Admin</option>
                                 <option value="user">standard User</option>
                                 <option value="author">Author</option>
 
@@ -140,6 +148,12 @@
           }
         },
         methods : {
+            getResults(page = 1) {
+                axios.get('api/user?page=' + page)
+                    .then(response => {
+                        this.users = response.data;
+                    });
+            },
             updateUser(){
                 this.$Progress.start();
                 this.form.put('api/user/'+this.form.id)
@@ -215,9 +229,11 @@
                 })
             },
             loadUsers(){
-                axios.get("api/user").then(
-                    ({data})=>(this.users=data.data) // this is a function anonym
-                );
+                   if(this.$gate.isAdminOrAuthor()){
+                       axios.get("api/user").then(
+                           ({data})=>(this.users=data) // this is a function anonym
+                       );
+                   }
             },
            createUser(){
                this.$Progress.start();

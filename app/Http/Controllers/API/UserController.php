@@ -21,7 +21,7 @@ class UserController extends Controller
     public function index()
     {
         $this->authorize('isAdminOrAuthor');
-         return User::latest()->paginate(8);
+         return User::latest()->paginate(3);
     }
 
     /**

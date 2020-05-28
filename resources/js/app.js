@@ -6,15 +6,24 @@
 
 require('./bootstrap');
 
+
 window.Vue = require('vue');
 import { Form, HasError, AlertError } from 'vform'
 window.Form=Form;
 Vue.component(HasError.name, HasError)
 Vue.component(AlertError.name, AlertError)
+Vue.component('pagination', require('laravel-vue-pagination'));
+
 import VueRouter from 'vue-router'
 import moment from 'moment';
 import VueProgressBar from 'vue-progressbar'
 import Swal from 'sweetalert2'
+
+import Gate from './Gate'
+Vue.prototype.$gate = new Gate(window.user1);
+
+
+
 
 window.Swal=Swal;
 window.Fire1=new Vue();
@@ -37,7 +46,8 @@ Vue.use(VueRouter)
 let routes = [
     { path: '/dashboard', component: require('./components/Dashboard.vue').default },
     { path: '/profile', component: require('./components/Profile.vue').default },
-    { path: '/users', component: require('./components/Users.vue').default }
+    { path: '/users', component: require('./components/Users.vue').default },
+    { path: '/*', component: require('./components/pageNotFound.vue').default },
 ]
 
 const router = new VueRouter({
@@ -60,9 +70,11 @@ Vue.use(VueProgressBar, {
 })
 
 
+Vue.component(
+    'not-found',
+    require('./components/pageNotFound.vue').default);  // this for declare the component globaly
 
 
-//Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 const app = new Vue({
     el: '#app',
     router
