@@ -4,7 +4,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">Responsive Hover Table</h3>
+                        <h3 class="card-title">Users Table</h3>
 
                         <div class="card-tools">
                            <button class="btn btn-success"  @click="addUser">
@@ -158,6 +158,12 @@
                 .catch(
                    ()=>{
                         this.$Progress.fail();
+                       Swal.fire(
+                           'Problem',
+                           'Your are not authorise',
+                           'warning'
+                       )
+                       $('#addNewModal').modal('hide');
                     }
                 );
             },
@@ -196,7 +202,13 @@
                                   Fire1.$emit('afterOperation');
                               })
                               .catch(()=>{
-                                  Swal("Failed","There was somthing wrong","Warning");
+                                  //Swal("Failed","There was somthing wrong","Warning");
+                                  Swal.fire(
+                                      'Problem',
+                                      'Your are not authorise',
+                                      'warning'
+                                  )
+                                  $('#addNewModal').modal('hide');
                               });
                       }
 
@@ -217,7 +229,18 @@
                               title: 'User Created successfully'
                               })}
                       )
-                   .catch();
+                   .catch(
+                       ()=>{
+                           Swal.fire(
+                               'Problem',
+                               'Your are not authorise',
+                               'warning'
+                           )
+                           $('#addNewModal').modal('hide');
+
+                       }
+
+                   );
               // this.loadUsers();  you can refresh on call loadUsers() function without $emit
                Fire1.$emit('afterOperation');
 

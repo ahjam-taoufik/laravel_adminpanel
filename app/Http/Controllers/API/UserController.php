@@ -9,6 +9,10 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+    public function __construct()
+    {
+       $this->middleware('auth:api');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -16,6 +20,7 @@ class UserController extends Controller
      */
     public function index()
     {
+        $this->authorize('isAdminOrAuthor');
          return User::latest()->paginate(8);
     }
 
@@ -27,6 +32,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('isAdmin');
         $this->validate($request,[
             'name'=>'required|string|max:255|min:4',
             'email'=>'required|string|max:255|email|unique:users',
@@ -45,16 +51,16 @@ class UserController extends Controller
         ]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function show($id)
     {
         //
     }
+
+     public function profile()
+        {
+            return auth('api')->user();
+        }
 
     /**
      * Update the specified resource in storage.
@@ -65,6 +71,7 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $this->authorize('isAdmin');
         $user=User::findOrFail($id);
         $this->validate($request,[
             'name'=>'required|string|max:255|min:4',
@@ -86,6 +93,7 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
+        $this->authorize('isAdmin');
         $user=User::findOrFail($id);
 
         $user->delete();

@@ -1975,10 +1975,71 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'profile',
+  data: function data() {
+    return {
+      user: ''
+      /* form: new Form({
+           id:'',
+           name :'',
+           email :'',
+           password :'',
+           type :'',
+           bio :'',
+           photo :''
+       })*/
+
+    };
+  },
   mounted: function mounted() {
     console.log('Component mounted.');
+  },
+  created: function created() {
+    var _this = this;
+
+    /* axios.get("api/profile")
+     .then(({data})=>(this.form.fill(data)));*/
+    axios.get("api/profile").then(function (_ref) {
+      var data = _ref.data;
+      return _this.user = data;
+    } // this is a function anonym
+    );
   }
 });
 
@@ -2147,6 +2208,9 @@ __webpack_require__.r(__webpack_exports__);
         Fire1.$emit('afterOperation');
       })["catch"](function () {
         _this.$Progress.fail();
+
+        Swal.fire('Problem', 'Your are not authorise', 'warning');
+        $('#addNewModal').modal('hide');
       });
     },
     addUser: function addUser() {
@@ -2179,7 +2243,9 @@ __webpack_require__.r(__webpack_exports__);
             Swal.fire('Deleted!', 'Your User has been deleted.', 'success');
             Fire1.$emit('afterOperation');
           })["catch"](function () {
-            Swal("Failed", "There was somthing wrong", "Warning");
+            //Swal("Failed","There was somthing wrong","Warning");
+            Swal.fire('Problem', 'Your are not authorise', 'warning');
+            $('#addNewModal').modal('hide');
           });
         }
       });
@@ -2201,7 +2267,10 @@ __webpack_require__.r(__webpack_exports__);
           icon: 'success',
           title: 'User Created successfully'
         });
-      })["catch"](); // this.loadUsers();  you can refresh on call loadUsers() function without $emit
+      })["catch"](function () {
+        Swal.fire('Problem', 'Your are not authorise', 'warning');
+        $('#addNewModal').modal('hide');
+      }); // this.loadUsers();  you can refresh on call loadUsers() function without $emit
 
       Fire1.$emit('afterOperation');
       this.$Progress.finish();
@@ -63011,25 +63080,70 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c("div", { staticClass: "container" }, [
+    _c("div", { staticClass: "row justify-content-center" }, [
+      _c("div", { staticClass: "col-md-8" }, [
+        _c("div", { staticClass: "card card-widget widget-user" }, [
+          _c("div", { staticClass: "widget-user-header bg-info" }, [
+            _c("h3", { staticClass: "widget-user-username" }, [
+              _vm._v(_vm._s(_vm.user.name))
+            ]),
+            _vm._v(" "),
+            _c("h5", { staticClass: "widget-user-desc" }, [
+              _vm._v(" Email :  " + _vm._s(_vm.user.email))
+            ])
+          ]),
+          _vm._v(" "),
+          _vm._m(0),
+          _vm._v(" "),
+          _vm._m(1)
+        ])
+      ])
+    ])
+  ])
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "container" }, [
-      _c("div", { staticClass: "row justify-content-center" }, [
-        _c("div", { staticClass: "col-md-8" }, [
-          _c("div", { staticClass: "card" }, [
-            _c("div", { staticClass: "card-header" }, [
-              _vm._v("Profile Component")
-            ]),
+    return _c("div", { staticClass: "widget-user-image" }, [
+      _c("img", {
+        staticClass: "img-circle elevation-2",
+        attrs: { src: "img/person.png", alt: "User Avatar" }
+      })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card-footer" }, [
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col-sm-4 border-right" }, [
+          _c("div", { staticClass: "description-block" }, [
+            _c("h5", { staticClass: "description-header" }, [_vm._v("3,200")]),
             _vm._v(" "),
-            _c("div", { staticClass: "card-body" }, [
-              _vm._v(
-                "\n                    I'm an example component.\n                "
-              )
+            _c("span", { staticClass: "description-text" }, [_vm._v("SALES")])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-sm-4 border-right" }, [
+          _c("div", { staticClass: "description-block" }, [
+            _c("h5", { staticClass: "description-header" }, [_vm._v("13,000")]),
+            _vm._v(" "),
+            _c("span", { staticClass: "description-text" }, [
+              _vm._v("FOLLOWERS")
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-sm-4" }, [
+          _c("div", { staticClass: "description-block" }, [
+            _c("h5", { staticClass: "description-header" }, [_vm._v("35")]),
+            _vm._v(" "),
+            _c("span", { staticClass: "description-text" }, [
+              _vm._v("PRODUCTS")
             ])
           ])
         ])
@@ -63063,9 +63177,7 @@ var render = function() {
       _c("div", { staticClass: "col-12" }, [
         _c("div", { staticClass: "card" }, [
           _c("div", { staticClass: "card-header" }, [
-            _c("h3", { staticClass: "card-title" }, [
-              _vm._v("Responsive Hover Table")
-            ]),
+            _c("h3", { staticClass: "card-title" }, [_vm._v("Users Table")]),
             _vm._v(" "),
             _c("div", { staticClass: "card-tools" }, [
               _c(
